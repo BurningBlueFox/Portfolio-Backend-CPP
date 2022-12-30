@@ -1,27 +1,43 @@
 {
-    "CareerExperiences": [
-        {
-            "Name": "Rockstar",
-            "StartDate": "2022-10",
-            "CurrentJob": true
-        },
-        {
-            "Name": "StoryToys",
-            "StartDate": "2020-11",
-            "EndDate": "2022-10",
-            "CurrentJob": false
-        }
-    ],
-    "CareerProjects": [
-        {
-            "Id": 0,
-            "Name": "Hungry Caterpillar Play School",
-            "Date": "2022-10"
-        },
-        {
-            "Id": 1,
-            "Name": "StoryToys",
-            "Date": "2020-02"
-        }
-    ]
+  "CareerExperiences": [
+    {
+      "Name": "Rockstar",
+      "StartDate": "2022-10",
+      "CurrentJob": true,
+      "Projects": [
+        0,
+        1
+      ],
+      "Links": []
+    },
+    {
+      "Name": "StoryToys",
+      "StartDate": "2020-11",
+      "EndDate": "2022-10",
+      "CurrentJob": false,
+      "Projects": [
+        0,
+        1
+      ],
+      "Links": []
+    }
+  ],
+  "CareerProjects": [
+    {
+      "Id": 0,
+      "Name": "Hungry Caterpillar Play School",
+      "Date": "2022-10",
+      "Images": [],
+      "Videos": [],
+      "Links": []
+    },
+    {
+      "Id": 1,
+      "Name": "StoryToys",
+      "Date": "2020-02",
+      "Images": [],
+      "Videos": [],
+      "Links": []
+    }
+  ]
 }

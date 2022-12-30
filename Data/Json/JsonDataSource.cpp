@@ -24,41 +24,25 @@ namespace ThiagoLeao::Portfolio::Data::Json
 	{
 		json data = json::parse(buffer);
 
-		if (data.contains(KEY_CAREER_PROJECTS))
+		for (const auto& entry : data[KEY_CAREER_PROJECTS])
 		{
-			for (const auto& entry : data[KEY_CAREER_PROJECTS])
-			{
-				auto id = entry[KEY_ID].get<int>();
-				auto name = entry[KEY_NAME].get<std::string>();
-				auto date = ConvertDate(entry[KEY_PROJECT_DATE].get<std::string>());
-
-				_vCareerProject.emplace_back(id, name, date);
-				std::cout << date.year().operator int() << "-" << date.month().operator unsigned int() << std::endl;
-			}
+			AddProject(entry, _vCareerProject);
 		}
-		if (data.contains(KEY_CAREER_EXPERIENCE))
+
+		for (const auto& entry : data[KEY_CAREER_EXPERIENCE])
 		{
-			for (const auto& entry : data[KEY_CAREER_EXPERIENCE])
-			{
-				auto name = entry[KEY_NAME].get<std::string>();
-				auto startDate = ConvertDate(entry[KEY_EXPERIENCE_START_DATE].get<std::string>());
-				auto currentJob = entry[KEY_EXPERIENCE_CURRENT_JOB].get<bool>();
-				std::chrono::year_month endDate{};
-
-				if (!currentJob)
-				{
-					endDate = ConvertDate(entry[KEY_EXPERIENCE_END_DATE].get<std::string>());
-				}
-			}
+			AddExperience(entry, _vCareerExperience, _vCareerProject);
 		}
+
+		std::cout << _vCareerProject.size() << " : " << _vCareerExperience.size() << std::endl;
 	}
 
-	std::vector<CareerProject> JsonDataSource::GetCareerProjects()
+	std::vector<std::shared_ptr<CareerProject>> JsonDataSource::GetCareerProjects()
 	{
 		return _vCareerProject;
 	}
 
-	std::vector<CareerExperience> JsonDataSource::GetCareerExperiences()
+	std::vector<std::shared_ptr<CareerExperience>> JsonDataSource::GetCareerExperiences()
 	{
 		return _vCareerExperience;
 	}
@@ -72,5 +56,52 @@ namespace ThiagoLeao::Portfolio::Data::Json
 		std::chrono::month m(month);
 
 		return { y, m };
+	}
+
+	void JsonDataSource::AddProject(const json::value_type& entry,
+		std::vector<std::shared_ptr<CareerProject>>& vec)
+	{
+		auto id = entry[KEY_ID].get<int>();
+		auto name = entry[KEY_NAME].get<std::string>();
+		auto date = ConvertDate(entry[KEY_PROJECT_DATE].get<std::string>());
+
+		std::shared_ptr<CareerProject> cProj(new CareerProject(id, name, date));
+		vec.emplace_back(std::move(cProj));
+	}
+
+	void JsonDataSource::AddExperience(const json::value_type& entry,
+		std::vector<std::shared_ptr<CareerExperience>>& vec,
+		std::vector<std::shared_ptr<CareerProject>>& projs)
+	{
+		auto name = entry[KEY_NAME].get<std::string>();
+		auto startDate = ConvertDate(entry[KEY_EXPERIENCE_START_DATE].get<std::string>());
+		auto currentJob = entry[KEY_EXPERIENCE_CURRENT_JOB].get<bool>();
+		std::chrono::year_month endDate{};
+
+		if (!currentJob)
+		{
+			endDate = ConvertDate(entry[KEY_EXPERIENCE_END_DATE].get<std::string>());
+		}
+
+		std::vector<std::shared_ptr<CareerProject>> proj{};
+		for (const auto& p : entry[KEY_EXPERIENCE_PROJECTS])
+		{
+			int projNumber = p.get<int>();
+			auto projPtr = FindProjById(projNumber, projs);
+			proj.emplace_back(projPtr);
+		}
+
+		std::shared_ptr<CareerExperience> cExp(new CareerExperience(name, startDate, endDate, currentJob, proj));
+		vec.emplace_back(std::move(cExp));
+	}
+
+	std::shared_ptr<CareerProject> JsonDataSource::FindProjById(int id, std::vector<std::shared_ptr<CareerProject>>& projects)
+	{
+		for (auto p : projects)
+		{
+			if (p->id == id)
+				return p;
+		}
+		return nullptr;
 	}
 }
