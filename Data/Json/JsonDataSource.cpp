@@ -16,9 +16,11 @@ namespace ThiagoLeao::Portfolio::Data::Json
 
 	const std::string KEY_NAME = "Name";
 	const std::string KEY_ID = "Id";
+	const std::string KEY_DESCRIPTION = "Description";
 	const std::string KEY_IMAGES = "Images";
 	const std::string KEY_VIDEOS = "Videos";
 	const std::string KEY_LINKS = "Links";
+	const std::string KEY_URL = "URL";
 
 	JsonDataSource::JsonDataSource(std::ifstream& buffer)
 	{
@@ -63,9 +65,26 @@ namespace ThiagoLeao::Portfolio::Data::Json
 	{
 		auto id = entry[KEY_ID].get<int>();
 		auto name = entry[KEY_NAME].get<std::string>();
+		auto description = entry[KEY_DESCRIPTION].get<std::string>();
 		auto date = ConvertDate(entry[KEY_PROJECT_DATE].get<std::string>());
 
-		std::shared_ptr<CareerProject> cProj(new CareerProject(id, name, date));
+		std::vector<ExternalLink> links;
+
+		for (auto image : entry[KEY_IMAGES])
+		{
+			links.emplace_back(image.get<std::string>(), "", Image);
+		}
+		for (auto video : entry[KEY_VIDEOS])
+		{
+			links.emplace_back(video.get<std::string>(), "", YoutubeVideo);
+		}
+		for (auto link : entry[KEY_LINKS])
+		{
+			links.emplace_back(link[KEY_URL].get<std::string>(), link[KEY_DESCRIPTION].get<std::string>(), WebPage);
+		}
+
+		std::shared_ptr<CareerProject> cProj(new CareerProject(id, name, description, date));
+		cProj->externalLinks = links;
 		vec.emplace_back(std::move(cProj));
 	}
 
@@ -74,6 +93,7 @@ namespace ThiagoLeao::Portfolio::Data::Json
 		std::vector<std::shared_ptr<CareerProject>>& projs)
 	{
 		auto name = entry[KEY_NAME].get<std::string>();
+		auto desctiption = entry[KEY_DESCRIPTION].get<std::string>();
 		auto startDate = ConvertDate(entry[KEY_EXPERIENCE_START_DATE].get<std::string>());
 		auto currentJob = entry[KEY_EXPERIENCE_CURRENT_JOB].get<bool>();
 		std::chrono::year_month endDate{};
@@ -91,11 +111,13 @@ namespace ThiagoLeao::Portfolio::Data::Json
 			proj.emplace_back(projPtr);
 		}
 
-		std::shared_ptr<CareerExperience> cExp(new CareerExperience(name, startDate, endDate, currentJob, proj));
+		std::shared_ptr<CareerExperience>
+			cExp(new CareerExperience(name, desctiption, startDate, endDate, currentJob, proj));
 		vec.emplace_back(std::move(cExp));
 	}
 
-	std::shared_ptr<CareerProject> JsonDataSource::FindProjById(int id, std::vector<std::shared_ptr<CareerProject>>& projects)
+	std::shared_ptr<CareerProject> JsonDataSource::FindProjById(int id,
+		std::vector<std::shared_ptr<CareerProject>>& projects)
 	{
 		for (auto p : projects)
 		{

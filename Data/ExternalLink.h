@@ -5,12 +5,12 @@ namespace ThiagoLeao::Portfolio::Data
 {
 	enum LinkType
 	{
-		WebPage,
 		Image,
-		YoutubeVideo
+		YoutubeVideo,
+		WebPage
 	};
 
-	struct ExternalLink
+	class ExternalLink
 	{
 	public:
 		std::string url;
@@ -20,6 +20,7 @@ namespace ThiagoLeao::Portfolio::Data
 		ExternalLink(const std::string& url, const std::string& description, LinkType linkType)
 			: url(url), description(description), linkType(linkType)
 		{
+
 		}
 	};
 }

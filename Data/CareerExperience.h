@@ -11,18 +11,19 @@ namespace ThiagoLeao::Portfolio::Data
 	{
 	public:
 		std::string name;
+		std::string description;
 		std::chrono::year_month startDate;
 		std::chrono::year_month endDate;
 		bool currentJob;
 		std::vector<std::shared_ptr<CareerProject>> careerProjects;
-		std::vector<ExternalLink> externalLinks;
 
 		CareerExperience(const std::string& name,
+			const std::string& description,
 			const std::chrono::year_month& startDate,
 			const std::chrono::year_month& endDate,
 			bool currentJob,
 			const std::vector<std::shared_ptr<CareerProject>>& careerProjects)
-			: name(name), startDate(startDate), endDate(endDate), currentJob(currentJob),
+			: name(name), description(description), startDate(startDate), endDate(endDate), currentJob(currentJob),
 			  careerProjects(careerProjects)
 		{
 		}

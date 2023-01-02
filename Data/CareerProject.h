@@ -11,12 +11,14 @@ namespace ThiagoLeao::Portfolio::Data
 	public:
 		int id;
 		std::string name;
+		std::string description;
 		std::chrono::year_month date;
 		std::vector<ExternalLink> externalLinks;
 
 		CareerProject(int id,
 			const std::string& name,
-			const std::chrono::year_month& date) : id(id), name(name), date(date)
+			const std::string& description,
+			const std::chrono::year_month& date) : id(id), name(name), description(description), date(date)
 		{
 		}
 	};
