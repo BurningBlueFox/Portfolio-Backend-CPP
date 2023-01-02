@@ -6,7 +6,7 @@
 
 namespace ThiagoLeao::Portfolio::Data::Json
 {
-	class JsonDataSource : IDataSource
+	class JsonDataSource : public IDataSource
 	{
 	public:
 		JsonDataSource(std::ifstream& buffer);
