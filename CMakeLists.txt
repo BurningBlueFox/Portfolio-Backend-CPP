@@ -34,7 +34,7 @@ CPMAddPackage(
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
-add_executable(Portfolio main.cpp Data/IDataSource.h Data/CareerProject.h Data/ExternalLink.h Data/CareerExperience.h Data/Json/JsonDataSource.cpp Data/Json/JsonDataSource.h Data/IDataSourceExporter.h Data/Json/JsonDataSourceExporter.cpp Data/Json/JsonDataSourceExporter.h Data/Json/JsonValues.h Web/IServer.h Web/Drogon/DrogonServer.h Web/Drogon/DrogonServer.cpp)
+add_executable(Portfolio main.cpp Data/IDataSource.h Data/CareerProject.h Data/ExternalLink.h Data/CareerExperience.h Data/Json/JsonDataSource.cpp Data/Json/JsonDataSource.h Data/IDataSourceExporter.h Data/Json/JsonDataSourceExporter.cpp Data/Json/JsonDataSourceExporter.h Data/Json/JsonValues.h Web/IServer.h Web/Drogon/DrogonServer.h Web/Drogon/DrogonServer.cpp Web/Drogon/PortfolioController.cpp Web/Drogon/PortfolioController.h Web/Drogon/PortfolioPlugin.h Web/Drogon/PortfolioPlugin.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE drogon)
 target_link_libraries(Portfolio PRIVATE nlohmann_json::nlohmann_json)

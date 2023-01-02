@@ -9,9 +9,13 @@ namespace ThiagoLeao::Portfolio::Web::Drogon
 	{
 	public:
 		DrogonServer(std::string& ip, unsigned short port);
+		//static std::string dataExport;
 		void Run() override;
+		bool IsRunning() override;
+		void Stop() override;
 	private:
 		std::string ip;
 		unsigned short port;
+		bool isRunning;
 	};
 }

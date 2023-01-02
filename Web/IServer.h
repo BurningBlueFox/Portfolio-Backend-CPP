@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Data/IDataSourceExporter.h"
+using IDataSourceExporter = ThiagoLeao::Portfolio::Data::IDataSourceExporter;
 namespace ThiagoLeao::Portfolio::Web
 {
 	struct IpPort
@@ -26,5 +28,7 @@ namespace ThiagoLeao::Portfolio::Web
 	{
 	public:
 		virtual void Run() = 0;
+		virtual bool IsRunning() = 0;
+		virtual void Stop() = 0;
 	};
 }
